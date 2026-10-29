@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Human Anatomy</title>
+<style>
+:root{--bg:#f7f5f2;--card:#fff;--text:#1d1b1a;--muted:#6b6560;--accent:#c0392b;--line:#e6e1db;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171514;--card:#211e1c;--text:#f1ece6;--muted:#a39b93;--accent:#ee6a5a;--line:#33302d}}
+:root[data-theme="dark"]{--bg:#171514;--card:#211e1c;--text:#f1ece6;--muted:#a39b93;--accent:#ee6a5a;--line:#33302d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:2rem;margin:8px 0 4px}
+.sub{color:var(--muted);margin:0 0 18px}
+input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font:inherit}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:16px 0}
+.sys{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;font:inherit;color:var(--text)}
+.sys .e{font-size:1.8rem;display:block}
+.sys.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.panel h2{margin:0 0 6px;font-size:1.4rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tag{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.88rem}
+ul{padding-left:20px;margin:8px 0}
+h3{margin:26px 0 8px;font-size:1.2rem}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px 10px 46px;margin:8px 0;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;text-align:center;font-size:.85rem;line-height:24px}
+.quiz button{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;cursor:pointer}
+.ok{border-color:#2e9e5b!important}.bad{border-color:var(--accent)!important}
+.note{color:var(--muted);font-size:.85rem;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Human Anatomy</h1>
+<p class="sub">Organ systems, bones, organs, and the journey of a pill through the body.</p>
+<input id="q" placeholder="Search: heart, bone, liver…" autocomplete="off">
+<div class="grid" id="grid"></div>
+<div class="panel" id="panel"></div>
+
+<h3>A pill's journey through the body</h3>
+<ol class="steps">
+<li><b>Mouth and esophagus.</b> The pill is swallowed and reaches the stomach.</li>
+<li><b>Stomach.</b> Acid dissolves the coating; some pills have an acid-resistant coating on purpose.</li>
+<li><b>Small intestine.</b> Most of the active ingredient is absorbed into the blood here.</li>
+<li><b>Liver.</b> Part of the substance is broken down before it reaches the general bloodstream.</li>
+<li><b>Bloodstream.</b> The substance is carried to organs and tissues where it acts.</li>
+<li><b>Kidneys.</b> Leftovers and breakdown products leave the body in urine.</li>
+</ol>
+
+<h3>Mini quiz</h3>
+<div class="quiz" id="quiz"></div>
+
+<p class="note">For general information only. It does not replace advice from a doctor. Discuss doses and treatment only with a medical professional.</p>
+</div>
+<script>
+const S=[
+{id:"skel",e:"🦴",n:"Skeleton",d:"Supports the body, protects organs, and produces blood cells in the bone marrow.",o:["Skull","Spine","Ribs","Femur","Hip joint"],f:["An adult has 206 bones; a newborn has about 270.","The longest bone is the femur (thigh bone).","The smallest is the stapes, in the middle ear."]},
+{id:"musc",e:"💪",n:"Muscles",d:"Produce movement, hold posture, and generate heat.",o:["Biceps","Triceps","Diaphragm","Calf muscle","Masseter"],f:["More than 600 skeletal muscles.","Muscle types: skeletal, smooth, and cardiac.","Skeletal muscles work in pairs: a flexor and an extensor."]},
+{id:"heart",e:"❤️",n:"Heart & vessels",d:"The circulatory system delivers oxygen and nutrients and carries away waste.",o:["Heart","Aorta","Veins","Arteries","Capillaries"],f:["The heart beats about 100,000 times a day.","Four chambers: two atria and two ventricles.","Blood vessels total tens of thousands of kilometers in length."]},
+{id:"lung",e:"🫁",n:"Respiration",d:"Gas exchange: oxygen enters the blood and carbon dioxide leaves.",o:["Trachea","Bronchi","Lungs","Alveoli","Diaphragm"],f:["The lungs hold roughly 300–500 million alveoli.","An adult at rest takes 12–20 breaths a minute.","The right lung has three lobes, the left has two."]},
+{id:"dig",e:"🍽️",n:"Digestion",d:"Breaks food down into nutrients and absorbs them.",o:["Stomach","Liver","Pancreas","Small intestine","Large intestine","Gallbladder"],f:["The small intestine is about 6 meters long.","Stomach acid is very strong (pH about 1.5–3.5).","The liver performs hundreds of functions, including detoxifying substances."]},
+{id:"nerv",e:"🧠",n:"Nervous system",d:"Controls the body: the brain, spinal cord, and nerves carry signals.",o:["Brain","Spinal cord","Cerebellum","Peripheral nerves"],f:["About 86 billion neurons in the brain.","Nerve impulses can travel up to 120 m/s.","The brain weighs about 1.4 kg and uses about 20% of the body's energy."]},
+{id:"endo",e:"⚗️",n:"Endocrine system",d:"Glands release hormones that regulate metabolism, growth, and mood.",o:["Pituitary","Thyroid","Adrenal glands","Pancreas"],f:["Hormones act in the blood at tiny concentrations.","Insulin is made in the pancreas.","The pituitary is the master gland, about the size of a pea."]},
+{id:"kid",e:"💧",n:"Excretion",d:"Filters the blood and removes excess substances and metabolic waste.",o:["Kidneys","Ureters","Bladder","Urethra"],f:["The kidneys filter about 180 liters of primary urine a day.","Each kidney contains about a million nephrons.","Kidneys also regulate blood pressure and the balance of water and salts."]}
+];
+const grid=document.getElementById("grid"),panel=document.getElementById("panel"),q=document.getElementById("q");
+let cur="skel";
+function render(){
+ const t=q.value.trim().toLowerCase();
+ const list=S.filter(s=>!t||(s.n+s.d+s.o.join(" ")+s.f.join(" ")).toLowerCase().includes(t));
+ grid.innerHTML=list.map(s=>`<button class="sys ${s.id===cur?"on":""}" data-id="${s.id}"><span class="e">${s.e}</span>${s.n}</button>`).join("");
+ if(!list.length){panel.innerHTML="<p>Nothing found.</p>";return}
+ if(!list.some(s=>s.id===cur))cur=list[0].id;
+ grid.querySelectorAll(".sys").forEach(b=>b.classList.toggle("on",b.dataset.id===cur));
+ const s=S.find(x=>x.id===cur);
+ panel.innerHTML=`<h2>${s.e} ${s.n}</h2><div>${s.d}</div><div class="tags">${s.o.map(o=>`<span class="tag">${o}</span>`).join("")}</div><ul>${s.f.map(f=>`<li>${f}</li>`).join("")}</ul>`;
+}
+grid.onclick=e=>{const b=e.target.closest(".sys");if(b){cur=b.dataset.id;render()}};
+q.oninput=render;render();
+
+const Q=[
+{q:"How many bones does an adult have?",a:["206","270","150"],c:0},
+{q:"Where does most of a pill get absorbed?",a:["Stomach","Small intestine","Kidneys"],c:1},
+{q:"Which organ breaks down many substances?",a:["Liver","Spleen","Pituitary"],c:0},
+{q:"Which is the longest bone?",a:["Humerus","Tibia","Femur"],c:2}
+];
+const quiz=document.getElementById("quiz");
+Q.forEach(x=>{
+ const d=document.createElement("div");
+ d.innerHTML=`<p><b>${x.q}</b></p>`;
+ x.a.forEach((t,i)=>{
+  const b=document.createElement("button");b.textContent=t;
+  b.onclick=()=>{[...d.querySelectorAll("button")].forEach(k=>k.disabled=true);b.classList.add(i===x.c?"ok":"bad");if(i!==x.c)d.querySelectorAll("button")[x.c].classList.add("ok")};
+  d.appendChild(b)});
+ quiz.appendChild(d)});
+</script>
+</body>
+</html>
